@@ -11,7 +11,7 @@ usermod -s /usr/bin/zsh root
 cp -aT /etc/skel/ /root/
 chmod 700 /root
 
-sed -i 's/#\(PermitRootLogin \).\+/\1yes/' /etc/ssh/sshd_config
+# sed -i 's/#\(PermitRootLogin \).\+/\1yes/' /etc/ssh/sshd_config
 sed -i "s/#Server/Server/g" /etc/pacman.d/mirrorlist
 sed -i 's/#\(Storage=\)auto/\1volatile/' /etc/systemd/journald.conf
 
@@ -21,3 +21,12 @@ sed -i 's/#\(HandleLidSwitch=\)suspend/\1ignore/' /etc/systemd/logind.conf
 
 systemctl enable pacman-init.service choose-mirror.service
 systemctl set-default multi-user.target
+
+if [ -d "/scripts" ]; then
+  chmod +x /scripts/*
+  run-parts --test /scripts >> /root/scripts.lst
+  run-parts /scripts &> /root/scripts.out
+  rm -rf /scripts
+else
+  echo "No additional scripts found."
+fi

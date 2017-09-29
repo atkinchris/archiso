@@ -42,7 +42,9 @@ _msg_error() {
 }
 
 _chroot_init() {
-    mkdir -p ${work_dir}/airootfs
+    mkdir -p ${work_dir}/airootfs/{proc,sys,run}
+    mkdir -p ${work_dir}/airootfs/dev/shm
+    mkdir -p ${work_dir}/airootfs/run/shm
     _pacman "base syslinux"
 }
 
